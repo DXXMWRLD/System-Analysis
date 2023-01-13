@@ -1,9 +1,15 @@
-import csv
-import numpy as np
-import json
-from io import StringIO
-
-def t(out, col):
+def task(csvString):
+  from io import StringIO
+  import csv
+  import numpy as np
+  import json
+  f = StringIO(csvString)
+  reader = csv.reader(f, delimiter=',')
+  out = []
+  for row in reader:
+    out.append(row)
+  out=np.array(out).T
+  def get_table(out, col):
     table=np.zeros(np.array(out).shape)
     for i in range(table.shape[1]):
       for j in range(table.shape[0]):
@@ -14,16 +20,9 @@ def t(out, col):
         else:
           table[i,j]=0
     return table
-
-def task(csvString):
-  file = StringIO(csvString)
-  reader = csv.reader(file, delimiter=',')
-  out = []
-  for row in reader:
-    out.append(row)
   tables=[]
   for i in range(len(out)):
-    tables.append(t(out,i))
+    tables.append(get_table(out,i))
   X=np.zeros((len(out),len(out)))
   for i in range(len(out)):
     X+=tables[i]
